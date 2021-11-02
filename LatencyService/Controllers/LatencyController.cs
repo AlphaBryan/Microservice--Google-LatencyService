@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Net.Http ; 
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -36,15 +37,12 @@ namespace LatencyService.Controllers
         {
             if (time > maxLatency){
 
-               // body =  "{\"servicename\": \"ServiceTEST\"}" ;
-                var body = new Dictionary<string, string>{ { "servicename", "ServiceTest" },  };
+                var body =  "{\"servicename\": \"ServiceTEST\"}" ;
 
-                var json = JsonConvert.SerializeObject(body, Formatting.Indented);
-
-                var stringContent = new StringContent(json);
+                var stringContent = new StringContent(body, Encoding.UTF8, "application/json");
                 //Call SwitchService
-                JObject response  = await client.CallSwitchService(body);
-                if (reponse.IsSuccessStatusCode)
+                var response  = await client.CallSwitchService(stringContent);
+                if (response.IsSuccessStatusCode)
                 {
                     return 201 ;
                 }
