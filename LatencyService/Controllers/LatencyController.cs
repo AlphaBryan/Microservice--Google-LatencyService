@@ -44,10 +44,10 @@ namespace LatencyService.Controllers
                 var response  = await client.CallSwitchService(stringContent);
                 if (response.IsSuccessStatusCode)
                 {
-                    return 201 ;
+                    return 200;
                 }
             }
-            return 200 ; 
+            return 500; 
         }
     }
 }
