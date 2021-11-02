@@ -7,29 +7,31 @@ using Newtonsoft.Json.Linq;
 
 //using System.Web.Helpers;
 
-namespace LatencyService {
+namespace LatencyService
+{
 
     public class LatencyClient
     {
-        private readonly HttpClient httpClient ;
+        // private readonly HttpClient httpClient;
+        static HttpClient client = new HttpClient();
 
         //private readonly ServiceSettings settings ; 
 
-        public LatencyClient(HttpClient httpClient )
-        {
-            this.httpClient = httpClient ; 
-        }
+        // public LatencyClient(HttpClient httpClient)
+        // {
+        //     this.httpClient = httpClient;
+        // }
 
-        public record Route (string description) ;  // A revoir 
-        public record Latency(Route[] route ) ; // A revoir ??
+        public record Route(string description);  // A revoir 
+        public record Latency(Route[] route); // A revoir ??
 
         public async Task<dynamic> CallSwitchService(HttpContent body)
-        {   
-            var service_response = await httpClient.PostAsync( "https://equipe08-switchservice.herokuapp.com/switchService}" , body);
-            var service_response_string = await service_response.Content.ReadAsStringAsync(); 
+        {
+            var service_response = await client.PostAsync("https://equipe08-switchservice.herokuapp.com/switchService}", body);
+            var service_response_string = await service_response.Content.ReadAsStringAsync();
             JObject service_response_string_js = JObject.Parse(service_response_string);
-            return service_response_string_js; 
+            return service_response_string_js;
         }
-        
+
     }
 }

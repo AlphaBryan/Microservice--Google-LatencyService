@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Net.Http ; 
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -16,38 +16,42 @@ namespace LatencyService.Controllers
     [Route("[controller]")]
     public class LatencyController : ControllerBase
     {
-
-
         private readonly ILogger<LatencyController> _logger;
-        private readonly LatencyClient client ;
+        private readonly LatencyClient latencyClient = new LatencyClient();
+        static HttpClient client = new HttpClient();
+
         //Liste qui contient toutes les datas
-        
-        public int maxLatency = 15000 ; //MILLISECONDE ?
+
+        public int maxLatency = 15000; //MILLISECONDE ?
 
 
-        public LatencyController(ILogger<LatencyController> logger, LatencyClient client)
-        {
-            _logger = logger;
-            this.client = client ; 
-        } 
+        // public LatencyController(ILogger<LatencyController> logger, LatencyClient client)
+        // {
+        //     _logger = logger;
+        //     this.client = client;
+        // }
 
-        [HttpGet]
+        [HttpPost]
         [Route("/heartcheck")]
-        public async Task<int> ping (int time)
+        public async Task<int> ping([FromBody] int time)
         {
-            if (time > maxLatency){
-
-                var body =  "{\"servicename\": \"ServiceTEST\"}" ;
+            if (time > maxLatency)
+            {
+                var body = "{\"servicename\": \"intersection\"}";
+                //  if (lane crash) {
+                //      getAllServices --> "lane"
+                //          host : https
+                // }
 
                 var stringContent = new StringContent(body, Encoding.UTF8, "application/json");
                 //Call SwitchService
-                var response  = await client.CallSwitchService(stringContent);
+                var response = await latencyClient.CallSwitchService(stringContent);
                 if (response.IsSuccessStatusCode)
                 {
                     return 200;
                 }
             }
-            return 500; 
+            return 500;
         }
     }
 }
