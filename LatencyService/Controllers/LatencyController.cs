@@ -20,7 +20,6 @@ namespace LatencyService.Controllers
         private readonly ILogger<LatencyController> _logger;
         private readonly LatencyClient client ;
         //Liste qui contient toutes les datas
-        public List<LatencyResponse> listData = new List<LatencyResponse>() ;
         
         public int maxLatency = 15000 ; //MILLISECONDE ?
 
@@ -37,7 +36,12 @@ namespace LatencyService.Controllers
         {
             if (time > maxLatency){
 
-                body =  "{\"servicename\": \"ServiceTEST\"}" ;
+               // body =  "{\"servicename\": \"ServiceTEST\"}" ;
+                var body = new Dictionary<string, string>{ { "servicename", "ServiceTest" },  };
+
+                var json = JsonConvert.SerializeObject(body, Formatting.Indented);
+
+                var stringContent = new StringContent(json);
                 //Call SwitchService
                 JObject response  = await client.CallSwitchService(body);
                 if (reponse.IsSuccessStatusCode)

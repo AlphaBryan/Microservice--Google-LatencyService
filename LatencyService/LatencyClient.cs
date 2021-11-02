@@ -13,31 +13,20 @@ namespace LatencyService {
     {
         private readonly HttpClient httpClient ;
 
-        private readonly ServiceSettings settings ; 
+        //private readonly ServiceSettings settings ; 
 
-        public LatencyClient(HttpClient httpClient, IOptions<ServiceSettings> options )
+        public LatencyClient(HttpClient httpClient )
         {
             this.httpClient = httpClient ; 
-            settings = options.Value ;
+            
         }
 
         public record Route (string description) ;  // A revoir 
         public record Latency(Route[] route ) ; // A revoir ??
 
-        
-
-          public async Task<dynamic> CreateLatency(string url_Service )
-        {
-            var service_response = await httpClient.GetAsync( url_Service ) ; 
-            var service_response_string = await service_response.Content.ReadAsStringAsync() ; 
-            Thread.Sleep( 15000 );
-            JObject service_response_string_js = JObject.Parse(service_response_string);
-            return service_response_string_js ; 
-        }
-
-        public async Task<dynamic> CallSwitchService(string body)
+        public async Task<dynamic> CallSwitchService( System.Net.Http.HttpContent  body)
         {   
-            var service_response = await client.PostAsync( "https://equipe08-switchservice.herokuapp.com/switchService}" , body);
+            var service_response = await httpClient.PostAsync( "https://equipe08-switchservice.herokuapp.com/switchService}" , body);
             var service_response_string = await service_response.Content.ReadAsStringAsync() ; 
             JObject service_response_string_js = JObject.Parse(service_response_string);
             return service_response_string_js ; 
