@@ -22,14 +22,7 @@ namespace LatencyService.Controllers
 
         //Liste qui contient toutes les datas
 
-        public int maxLatency = 15000; //MILLISECONDE ?
-
-
-        // public LatencyController(ILogger<LatencyController> logger, LatencyClient client)
-        // {
-        //     _logger = logger;
-        //     this.client = client;
-        // }
+        public int maxLatency = 15000;
 
         [HttpPost]
         [Route("/heartcheck")]
@@ -44,7 +37,6 @@ namespace LatencyService.Controllers
                 // }
 
                 var stringContent = new StringContent(body, Encoding.UTF8, "application/json");
-                //Call SwitchService
                 var response = await latencyClient.CallSwitchService(stringContent);
                 if (response.IsSuccessStatusCode)
                 {
