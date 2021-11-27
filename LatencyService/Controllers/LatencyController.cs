@@ -30,14 +30,33 @@ namespace LatencyService.Controllers
         {
             if (time > maxLatency)
             {
-                var body = "{\"servicename\": \"intersection\"}";
-                //  if (lane crash) {
-                //      getAllServices --> "lane"
-                //          host : https
-                // }
+                string team = "equipe8" ; //Comparer avec les clefs ?
+                string serviceName = " " ; 
+                String newHost = " " ; 
+                String newKey = " " ;
+              
+                string request = @"{
+                                serviceName: {0},
+                                newHost: {1}
+                                newKey: {2}'
+                                }"; 
+
+                JObject responseAllServices = await latencyClient.CallGetAllServices() ; 
+                List<String> allHosts = responseAllServices["hostIPs"] ; 
+                int counter = 0 ; 
+                foreach(String host in allHosts){
+                    if(host.Contains(team) == false ){
+                        if(host.Contains(serviceName) == true ){
+                            newHost = host ; 
+                            newKey = responseAllServices["hostIPs"][counter] ; 
+                        }
+                    }
+                    counter++; 
+                }            
+                String body = string.Format(request, serviceName, newHost, newKey);
 
                 var stringContent = new StringContent(body, Encoding.UTF8, "application/json");
-                var response = await latencyClient.CallSwitchService(stringContent);
+                var response = await latencyClient.CallSwitchService(stringContent); 
                 if (response.IsSuccessStatusCode)
                 {
                     return 200;

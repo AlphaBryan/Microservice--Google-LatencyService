@@ -27,7 +27,15 @@ namespace LatencyService
 
         public async Task<dynamic> CallSwitchService(HttpContent body)
         {
-            var service_response = await client.PostAsync("https://equipe08-switchservice.herokuapp.com/switchService}", body);
+            var service_response = await client.PostAsync("https://equipe08-switchservice.herokuapp.com/switchService", body);
+            var service_response_string = await service_response.Content.ReadAsStringAsync();
+            JObject service_response_string_js = JObject.Parse(service_response_string);
+            return service_response_string_js;
+        }
+
+        public async Task<dynamic> CallGetAllServices()
+        {
+            var service_response = await client.PostAsync("https://eq8-log430service-discovery.herokuapp.com/getAllServices");
             var service_response_string = await service_response.Content.ReadAsStringAsync();
             JObject service_response_string_js = JObject.Parse(service_response_string);
             return service_response_string_js;
